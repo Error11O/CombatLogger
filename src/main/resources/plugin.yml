@@ -1,4 +1,10 @@
 name: CombatLogger
 version: '1.0'
-main: dev.Error110.combatLogger.CombatLogger
+main: dev.Error110.combatLogger.CombatLoggerPlugin
 api-version: '1.21'
+soft-depend: [towny]
+
+commands:
+  combat:
+    description: reloads the plugin or tests tagging on yourself
+    usage: /<command>
