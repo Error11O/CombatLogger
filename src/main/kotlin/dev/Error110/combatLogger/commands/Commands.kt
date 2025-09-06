@@ -1,9 +1,7 @@
 package dev.Error110.combatLogger.commands
 
-import dev.Error110.combatLogger.CombatLogger
 import dev.Error110.combatLogger.CombatLoggerPlugin
 import dev.Error110.combatLogger.CombatManager
-import dev.Error110.combatLogger.config.ConfigManager
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -15,9 +13,13 @@ class Commands : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         when (args[0].lowercase()) {
             "reload" -> {
-                ConfigManager.reload(CombatLogger.plugin!!)
-                sender.sendMessage("Config reloaded.")
-                return true
+                val plugin = org.bukkit.Bukkit.getPluginManager().getPlugin("CombatLogger") as? CombatLoggerPlugin
+                if (plugin != null) {
+                    plugin.reload()
+                    sender.sendMessage("Config reloaded.")
+                } else {
+                    sender.sendMessage("Plugin instance not found.")
+                }
             }
             "tag" -> {
                 if (sender is Player && sender.isOp) {

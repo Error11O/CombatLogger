@@ -1,5 +1,6 @@
 package dev.Error110.combatLogger.tasks
 
+import dev.Error110.combatLogger.CombatLogger
 import dev.Error110.combatLogger.CombatManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -48,7 +49,7 @@ class Bossbar : BukkitRunnable() {
         if (remaining < 0) return
 
         bossBar.setTitle("${ChatColor.RED}Combat Tag ${ChatColor.GRAY}: ${ChatColor.RED}${(remaining / 1000)}s")
-        bossBar.setProgress(remaining.toDouble() / CombatManager.TAG_TIME)
+        bossBar.setProgress(remaining.toDouble() / (CombatLogger.config!!.combat.tagSeconds * 1000).toLong())
     }
 
     fun remove(player: Player) {

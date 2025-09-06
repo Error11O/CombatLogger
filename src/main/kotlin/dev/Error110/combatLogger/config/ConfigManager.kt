@@ -63,11 +63,11 @@ object ConfigManager {
         )
     }
 
-    // reload config from file into the data classes defined in PluginConfig.kt
     fun reload(plugin: Plugin): PluginConfig {
         plugin.reloadConfig()
-        CombatLogger.config!!.logAll(plugin.logger)
-        return load(plugin)
+        val newConfig = load(plugin)
+        newConfig.logAll(plugin.logger)
+        return newConfig
     }
 
     private fun FileConfiguration.mapOfInts(path: String): Map<String, Int> {

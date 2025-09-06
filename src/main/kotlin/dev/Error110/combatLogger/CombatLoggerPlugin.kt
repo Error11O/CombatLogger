@@ -19,16 +19,10 @@ class CombatLoggerPlugin : JavaPlugin() {
 
     var bossbarTask = Bossbar()
 
-    lateinit var conf: PluginConfig
-        private set
-
     override fun onEnable() {
         saveDefaultConfig()
-
-        conf = ConfigManager.load(this)
-        logger.info("Loaded config v${conf.config_version}")
-
-        CombatLogger.init(this, conf)
+        val config = ConfigManager.load(this)
+        CombatLogger.init(this, config)
         bossbarTask.runTaskTimer(this, 10, 10)
 
         val hasTowny = server.pluginManager.isPluginEnabled("Towny")
@@ -51,9 +45,10 @@ class CombatLoggerPlugin : JavaPlugin() {
 
     fun reload(): Boolean {
         return try {
-            conf = ConfigManager.reload(this)
+            val newConfig = ConfigManager.reload(this)
+            CombatLogger.init(this, newConfig)
             logger.info("Config reloaded")
-            conf.logAll(this.logger)
+            newConfig.logAll(this.logger)
             true
         } catch (t: Throwable) {
             logger.severe("Config reload failed: ${t.message}")

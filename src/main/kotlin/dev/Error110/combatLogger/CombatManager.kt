@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap
 
 class CombatManager {
     companion object {
-        val TAG_TIME: Long = (CombatLogger.config!!.combat.tagSeconds * 1000).toLong()
         val combatTags: MutableMap<UUID, Long> = ConcurrentHashMap<UUID, Long>()
         init {
             CombatExpire().runTaskTimerAsynchronously(CombatLogger.plugin!!,10L, 10L)
@@ -18,9 +17,9 @@ class CombatManager {
     public fun applyTag(player: Player) {
         if (!isTagged(player)) {
             player.closeInventory()
-            player.sendMessage("${ChatColor.RED}You have been combat tagged for " + (TAG_TIME / 1000) + " seconds! Do not log out or you will get killed instantly.")
+            player.sendMessage("${ChatColor.RED}You have been combat tagged for " + (CombatLogger.config!!.combat.tagSeconds.toLong()) + " seconds! Do not log out or you will get killed instantly.")
         }
-        combatTags.put(player.getUniqueId(), System.currentTimeMillis() + TAG_TIME)
+        combatTags.put(player.getUniqueId(), System.currentTimeMillis() + (CombatLogger.config!!.combat.tagSeconds * 1000).toLong())
     }
 
     public fun removeTag(player: Player) {
