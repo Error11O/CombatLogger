@@ -2,6 +2,7 @@ name: CombatLogger
 version: '1.0'
 main: dev.Error110.combatLogger.CombatLoggerPlugin
 api-version: '1.21'
+depend: [MCKotlin-Paper]
 soft-depend: [towny]
 
 commands:
