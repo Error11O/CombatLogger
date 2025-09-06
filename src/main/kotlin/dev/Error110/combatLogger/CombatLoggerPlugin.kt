@@ -1,0 +1,14 @@
+package dev.Error110.combatLogger
+
+import org.bukkit.plugin.java.JavaPlugin
+
+class CombatLogger : JavaPlugin() {
+
+    override fun onEnable() {
+        // Plugin startup logic
+    }
+
+    override fun onDisable() {
+        // Plugin shutdown logic
+    }
+}
