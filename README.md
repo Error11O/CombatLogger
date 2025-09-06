@@ -2,7 +2,7 @@
 
 A simple combat logger for minecraft servers with some extra pvp related features.
 
-Reason of this plugin was I was tiered of bloated combat plugins that were bloated and still
+Reason of this plugin was I was annoyed of bloated combat plugins that were bloated and still
 missing features I wanted. If I am missing any features you want please open an issue or a PR.
 
 ### Features
@@ -17,12 +17,14 @@ missing features I wanted. If I am missing any features you want please open an 
 - command prevention while in combat e.g. /home, /warp, /spawn
 - travel bans while in combat e.g. elytra, horse, boat, minecart
 - storage access prevention while in combat e.g. chests, enderchests
+- reloading config without restarting the server
+
 
 ### TODO
-- [ ] fix reloading command 
-- [ ] remove debuff option
-- [ ] fix trident bug
 - [ ] support other claiming plugins
+- [ ] claim wall system instead of letting people enter claims (e.g. towny)
+- [ ] permissions
+- [ ] more config options e.g. bossbar color, message customization, etc.
 
 ### Commands
 - /combatlog reload - reloads the config

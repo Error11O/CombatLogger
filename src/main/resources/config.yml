@@ -1,18 +1,21 @@
+# CombatLogger Configuration File
+# Items are used from the Material enum: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 config_version: 1
 
+# General settings for CombatLogger including out of combat behavior
 combat:
-  tagSeconds: 45
+  tagSeconds: 30
   reTagOnPearl: true
   damageMultiplier: 1.0
-  banDebuffs: true
-  banPotions: false
 
+# Settings for storage access while in combat
 storage:
   preventChests: false
-  preventEnderChests: false
+  preventEnderChests: true
   preventBarrels: false
-  preventShulkerBoxes: true
+  preventShulkerBoxes: false
 
+# Settings for teleportation and movement restrictions while in combat
 transport:
   banElytra: true
   banTridents: true
@@ -22,13 +25,11 @@ transport:
   banBoats: false
   banMinecarts: false
 
+# Settings for command whitelist while in combat. try not to allow teleporting back to safety more for communication commands
 commands:
   whitelist:
     enabled: true
     list:
-      - tpahere
-      - tpaccept
-      - tpdeny
       - msg
       - tell
       - r
@@ -36,19 +37,25 @@ commands:
       - kill
       - report
 
+# Settings for item and block usage restrictions at all times.
 restrictions:
   banned_items:
     enabled: true
     items:
       - END_CRYSTAL
+      - RESPAWN_ANCHOR
 
+# Settings for item and block usage restrictions while in combat.
 cooldowns:
+  # Item related cooldowns are based on the item being used (right click or left click) not blocks being placed.
   items:
     enabled: true
     seconds:
-      GOLDEN_APPLE: 5
-      END_CRYSTAL: 5
-      ENDER_PEARL: 12
+      GOLDEN_APPLE: 10
+      ENDER_PEARL: 16
+  # Block related cooldowns are based on the block being placed with 2 settings seconds of cooldown and if decay is enabled.
+  # decay means after 2x the cooldown the block placed will turn into air useful for cobweb control.
+  # (decay does not save to disk if theres a restart the decay list is cleared)
   blocks:
     enabled: true
     rules:
@@ -56,5 +63,5 @@ cooldowns:
         seconds: 5
         decay_enabled: true
       OBSIDIAN:
-        seconds: 10
+        seconds: 15
         decay_enabled: false

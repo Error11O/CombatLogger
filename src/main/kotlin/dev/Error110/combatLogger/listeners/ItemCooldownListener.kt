@@ -41,6 +41,7 @@ class ItemCooldownListener : Listener {
 
     fun setCooldown(type : Material) : Boolean {
         // loop material from config
+        if (!CombatLogger.config!!.cooldowns.items.enabled) return false
         for (mat in CombatLogger.config!!.cooldowns.items.seconds.keys) {
             if (Material.getMaterial(mat) == null) continue
             if (type != Material.getMaterial(mat)) continue

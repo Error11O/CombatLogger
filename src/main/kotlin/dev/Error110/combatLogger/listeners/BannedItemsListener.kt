@@ -55,9 +55,11 @@ class BannedItemsListener : Listener {
     }
 
     fun purgeLater(player: Player) {
-        Bukkit.getScheduler().runTask(CombatLogger.plugin!!, Runnable {
-            purge(player)
-        })
+        if (CombatLogger.config!!.restrictions.banned_items.enabled) {
+            Bukkit.getScheduler().runTask(CombatLogger.plugin!!, Runnable {
+                purge(player)
+            })
+        }
     }
 
     fun purge(player: Player) {
@@ -65,7 +67,7 @@ class BannedItemsListener : Listener {
     }
 
     private fun purge(inv: PlayerInventory) {
-        if (!CombatLogger.config!!.restrictions.banned_items.enabled || CombatLogger.config!!.restrictions.banned_items.items.isEmpty()) return
+        if (CombatLogger.config!!.restrictions.banned_items.items.isEmpty()) return
         val banned = CombatLogger.config!!.restrictions.banned_items.items.mapNotNull { Material.getMaterial(it) }.toSet()
         // main storage
         val storage = inv.storageContents

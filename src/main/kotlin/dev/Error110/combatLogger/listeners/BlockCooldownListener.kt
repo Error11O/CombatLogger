@@ -13,6 +13,7 @@ class BlockCooldownListener : Listener {
 
     @EventHandler
     fun blockPlace(event : BlockPlaceEvent) {
+        if (!CombatLogger.config!!.cooldowns.blocks.enabled) return
         val player = event.player
         if (!CombatManager().isTagged(player)) return
         val block = event.block

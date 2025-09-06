@@ -1,6 +1,5 @@
 package dev.Error110.combatLogger
 
-import dev.Error110.combatLogger.config.ConfigManager
 import dev.Error110.combatLogger.config.PluginConfig
 import dev.Error110.combatLogger.config.logAll
 import org.bukkit.plugin.Plugin

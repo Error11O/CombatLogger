@@ -6,6 +6,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
@@ -13,6 +14,10 @@ class Commands : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         when (args[0].lowercase()) {
             "reload" -> {
+                if (!sender.isOp || sender !is ConsoleCommandSender) {
+                    sender.sendMessage("Only opped players can use this command.")
+                    return true
+                }
                 val plugin = org.bukkit.Bukkit.getPluginManager().getPlugin("CombatLogger") as? CombatLoggerPlugin
                 if (plugin != null) {
                     plugin.reload()

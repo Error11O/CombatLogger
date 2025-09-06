@@ -14,8 +14,6 @@ data class Combat(
     val tagSeconds: Int = 45,
     val reTagOnPearl: Boolean = false,
     val damageMultiplier: Double = 1.0,
-    val banDebuffs: Boolean = true,
-    val banPotions: Boolean = false
 )
 
 data class Storage(
@@ -82,8 +80,6 @@ fun PluginConfig.prettyString(): String = buildString {
     appendLine("    tagSeconds=${combat.tagSeconds}")
     appendLine("    reTagOnPearl=${combat.reTagOnPearl}")
     appendLine("    damageMultiplier=${combat.damageMultiplier}")
-    appendLine("    banDebuffs=${combat.banDebuffs}")
-    appendLine("    banPotions=${combat.banPotions}")
     appendLine("  }")
 
     appendLine("  storage {")
