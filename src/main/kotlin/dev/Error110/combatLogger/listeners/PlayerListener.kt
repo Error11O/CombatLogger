@@ -21,27 +21,29 @@ import java.util.*
 class PlayerListener : Listener {
     val deathsForLoggingOut: MutableSet<UUID> = HashSet()
 
-    @EventHandler
+    // apply combat tag on player vs player damage
+    @EventHandler(ignoreCancelled = true)
     fun onCombat(event: EntityDamageByEntityEvent) {
         if (event.damager is Player && event.entity is Player) {
             val attacker = event.damager as Player
             val victim = event.entity as Player
-            if (attacker.equals(victim)) return;
-            CombatManager().applyTag(attacker)
-            CombatManager().applyTag(victim)
+            if (attacker.equals(victim)) return
+            if (event.finalDamage <= 0.0) return
+            CombatManager.applyTag(attacker)
+            CombatManager.applyTag(victim)
         }
     }
-
+    // kill player if they log out while in combat
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         val player = event.player
-        if (!CombatManager().isTagged(player)) return
-        CombatManager().removeTag(player);
+        if (!CombatManager.isTagged(player)) return
+        CombatManager.removeTag(player);
 
         deathsForLoggingOut.add(player.uniqueId);
         player.setHealth(0.0);
     }
-
+    // Remove combat tag on death TODO: remove the killers combat tag too?
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         val player = event.entity
@@ -50,33 +52,36 @@ class PlayerListener : Listener {
             deathsForLoggingOut.remove(player.getUniqueId());
             event.deathMessage = "${player.name} Logged out in combat."
         }
-        if (!CombatManager().isTagged(player)) return;
-
-        CombatManager().removeTag(player);
+        if (!CombatManager.isTagged(player)) return;
+        CombatManager.removeTag(player);
     }
 
+    // readd combat tag on ender pearl throw if configured to do so
     @EventHandler
     fun onThrowEvent(event : PlayerItemCooldownEvent) {
         if (event.type != Material.ENDER_PEARL) return
         if (CombatLogger.config!!.combat.reTagOnPearl) {
             val shooter = event.player
-            if (CombatManager().isTagged(shooter)) {
-                CombatManager().applyTag(shooter)
+            if (CombatManager.isTagged(shooter)) {
+                CombatManager.applyTag(shooter)
             }
         }
     }
 
+    // prevent commands while in combat if not whitelisted
+    // ops are exempt from this restriction
     @EventHandler
     fun onCommandInCombat(event: PlayerCommandPreprocessEvent) {
         if (!CombatLogger.config!!.commands.whitelist.enabled) return
         if (event.player.isOp) return
         val command = event.message.replace("/", "")
-        if (CombatManager().isTagged(event.player)) {
+        if (CombatManager.isTagged(event.player)) {
             for (white in CombatLogger.config!!.commands.whitelist.list ) if (command.startsWith(white)) return else continue
             event.isCancelled = true
         }
     }
 
+    // increase damage dealt while in combat if configured to do so (default is 1.0, so no increase)
     @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         if (event.getDamager() !is Player) return
@@ -90,11 +95,12 @@ class PlayerListener : Listener {
         val uuid = event.player.uniqueId
         val player = Bukkit.getPlayer(uuid!!)!!
         val inventory = event.inventory
-        if (!CombatManager().isTagged(player)) return
+        if (!CombatManager.isTagged(player)) return
 
         val storage = CombatLogger.config?.storage ?: return
         val type = inventory.type
 
+        // Determine if the inventory type is one we want to prevent
         val (prevent, label) = when (type) {
             InventoryType.CHEST -> storage.preventChests to "chests"
             InventoryType.ENDER_CHEST -> storage.preventEnderChests to "ender chests"

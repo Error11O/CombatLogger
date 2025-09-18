@@ -63,6 +63,7 @@ object ConfigManager {
         )
     }
 
+    // reload config from file
     fun reload(plugin: Plugin): PluginConfig {
         plugin.reloadConfig()
         val newConfig = load(plugin)

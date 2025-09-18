@@ -15,7 +15,7 @@ class BlockCooldownListener : Listener {
     fun blockPlace(event : BlockPlaceEvent) {
         if (!CombatLogger.config!!.cooldowns.blocks.enabled) return
         val player = event.player
-        if (!CombatManager().isTagged(player)) return
+        if (!CombatManager.isTagged(player)) return
         val block = event.block
         for ((mat, rule) in CombatLogger.config!!.cooldowns.blocks.rules) {
             // if config is bad we skip it TODO: maybe log it?

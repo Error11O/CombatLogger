@@ -66,6 +66,7 @@ class BannedItemsListener : Listener {
         purge(player.inventory)
     }
 
+    // removes banned items from the given inventory
     private fun purge(inv: PlayerInventory) {
         if (CombatLogger.config!!.restrictions.banned_items.items.isEmpty()) return
         val banned = CombatLogger.config!!.restrictions.banned_items.items.mapNotNull { Material.getMaterial(it) }.toSet()

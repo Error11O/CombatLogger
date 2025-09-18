@@ -1,6 +1,6 @@
 package dev.Error110.combatLogger.tasks
 
-import dev.Error110.combatLogger.CombatManager.Companion.combatTags
+import dev.Error110.combatLogger.CombatManager.combatTags
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
@@ -21,7 +21,7 @@ class CombatExpire : BukkitRunnable() {
 
             val uuid = entry.key
             val player = Bukkit.getPlayer(uuid)
-            if (player == null || !player.isOnline())
+            if (player == null || !player.isOnline)
                 continue
             player.sendMessage("${ChatColor.GREEN}You are no longer in combat.")
         }

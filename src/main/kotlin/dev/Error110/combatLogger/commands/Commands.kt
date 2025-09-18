@@ -13,6 +13,7 @@ import org.bukkit.entity.Player
 class Commands : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         when (args[0].lowercase()) {
+            // reload command
             "reload" -> {
                 if (!sender.isOp || sender !is ConsoleCommandSender) {
                     sender.sendMessage("Only opped players can use this command.")
@@ -26,10 +27,11 @@ class Commands : CommandExecutor, TabCompleter {
                     sender.sendMessage("Plugin instance not found.")
                 }
             }
+            // tag command for testing
             "tag" -> {
                 if (sender is Player && sender.isOp) {
                  val player = sender as Player
-                    CombatManager().applyTag(player)
+                    CombatManager.applyTag(player)
                     player.sendMessage("${ChatColor.RED}You have been force tagged for testing.")
                 } else sender.sendMessage("Only opped players can use this command.")
             }

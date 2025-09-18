@@ -11,18 +11,19 @@ import org.bukkit.event.Listener
 
 class TownyListener : Listener {
 
+    // allows pvp in claims if one of the players is combat tagged
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onPvP(event: TownyPlayerDamagePlayerEvent) {
-        if (!event.isCancelled()) return
-        val world: TownyWorld? = TownyAPI.getInstance().getTownyWorld(event.getVictimPlayer().getWorld().getName())
+        if (!event.isCancelled) return
+        val world: TownyWorld? = TownyAPI.getInstance().getTownyWorld(event.victimPlayer.world.name)
 
-        if (world == null || !world.isUsingTowny() || !world.isPVP() || !CombatManager().isTagged(event.victimPlayer)) return
+        if (world == null || !world.isUsingTowny || !world.isPVP || !CombatManager.isTagged(event.victimPlayer)) return
 
-        if (CombatManager().isTagged(event.victimPlayer)) {
-            if (CombatManager().isTagged(event.attackingPlayer)) {
-                event.setCancelled(false)
+        if (CombatManager.isTagged(event.victimPlayer)) {
+            if (CombatManager.isTagged(event.attackingPlayer)) {
+                event.isCancelled = false
             } else return
         }
-        event.setCancelled(false)
+        event.isCancelled = false
     }
 }

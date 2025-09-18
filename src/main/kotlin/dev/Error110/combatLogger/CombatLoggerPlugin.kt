@@ -11,9 +11,11 @@ import dev.Error110.combatLogger.listeners.ItemCooldownListener
 import dev.Error110.combatLogger.listeners.PlayerListener
 import dev.Error110.combatLogger.listeners.TownyListener
 import dev.Error110.combatLogger.tasks.Bossbar
+import dev.Error110.combatLogger.tasks.CombatExpire
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.util.logging.Logger
 
 class CombatLoggerPlugin : JavaPlugin() {
 
@@ -23,9 +25,9 @@ class CombatLoggerPlugin : JavaPlugin() {
         saveDefaultConfig()
         val config = ConfigManager.load(this)
         CombatLogger.init(this, config)
-        bossbarTask.runTaskTimer(this, 10, 10)
 
-        val hasTowny = server.pluginManager.isPluginEnabled("Towny")
+        bossbarTask.runTaskTimer(this, 10, 10)
+        CombatExpire().runTaskTimerAsynchronously(CombatLogger.plugin!!, 10L, 10L)
 
         this.getCommand("combat")?.setExecutor(Commands())
         this.getCommand("combat")?.tabCompleter = Commands() as TabCompleter
@@ -34,7 +36,7 @@ class CombatLoggerPlugin : JavaPlugin() {
         server.pluginManager.registerEvents(ItemCooldownListener(), this)
         server.pluginManager.registerEvents(PlayerListener(), this)
         server.pluginManager.registerEvents(BannedTransportListener(), this)
-        if (hasTowny) {
+        if (server.pluginManager.isPluginEnabled("Towny")) {
             logger.info("Towny detected, enabling Towny support")
             server.pluginManager.registerEvents(TownyListener(), this)
         }
@@ -57,6 +59,6 @@ class CombatLoggerPlugin : JavaPlugin() {
     }
 
     override fun onDisable() {
-        // Plugin shutdown logic
+        logger.info("CombatLogger disabled!")
     }
 }
