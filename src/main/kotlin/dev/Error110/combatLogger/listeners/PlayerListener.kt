@@ -8,6 +8,7 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.PlayerDeathEvent
@@ -20,9 +21,11 @@ import java.util.*
 
 class PlayerListener : Listener {
     val deathsForLoggingOut: MutableSet<UUID> = HashSet()
+    //                    vic , killer
+    val attackerTracker = HashMap<UUID, UUID>();
 
     // apply combat tag on player vs player damage
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     fun onCombat(event: EntityDamageByEntityEvent) {
         if (event.damager is Player && event.entity is Player) {
             val attacker = event.damager as Player
@@ -31,6 +34,8 @@ class PlayerListener : Listener {
             if (event.finalDamage <= 0.0) return
             CombatManager.applyTag(attacker)
             CombatManager.applyTag(victim)
+            attackerTracker[victim.uniqueId] = attacker.uniqueId;
+            attackerTracker[attacker.uniqueId] = victim.uniqueId;
         }
     }
     // kill player if they log out while in combat
@@ -43,7 +48,6 @@ class PlayerListener : Listener {
         deathsForLoggingOut.add(player.uniqueId);
         player.setHealth(0.0);
     }
-    // Remove combat tag on death TODO: remove the killers combat tag too?
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         val player = event.entity
@@ -51,6 +55,13 @@ class PlayerListener : Listener {
         if (deathsForLoggingOut.contains(player.getUniqueId())) {
             deathsForLoggingOut.remove(player.getUniqueId());
             event.deathMessage = "${player.name} Logged out in combat."
+        }
+        if (attackerTracker.containsKey(player.uniqueId)) {
+            val killerUUID = attackerTracker[player.uniqueId]!!
+            val killer = Bukkit.getPlayer(killerUUID)
+            if (killer != null) CombatManager.removeTag(killer)
+            attackerTracker.remove(player.uniqueId)
+            attackerTracker.remove(killerUUID)
         }
         if (!CombatManager.isTagged(player)) return;
         CombatManager.removeTag(player);

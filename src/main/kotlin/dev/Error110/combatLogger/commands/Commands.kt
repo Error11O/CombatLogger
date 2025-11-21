@@ -2,6 +2,7 @@ package dev.Error110.combatLogger.commands
 
 import dev.Error110.combatLogger.CombatLoggerPlugin
 import dev.Error110.combatLogger.CombatManager
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -19,7 +20,7 @@ class Commands : CommandExecutor, TabCompleter {
                     sender.sendMessage("Only opped players can use this command.")
                     return true
                 }
-                val plugin = org.bukkit.Bukkit.getPluginManager().getPlugin("CombatLogger") as? CombatLoggerPlugin
+                val plugin = Bukkit.getPluginManager().getPlugin("CombatLogger") as? CombatLoggerPlugin
                 if (plugin != null) {
                     plugin.reload()
                     sender.sendMessage("Config reloaded.")
